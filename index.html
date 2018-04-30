@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Westworld Admin Portal / NYU AJAX & Webservices/Sam Sultan, Spring 2018</title>
+  <meta name="author" content="Rudy Pospisil">
+  <meta name="description" content="Final Project, NYU AJAX & Webservices/Sam Sultan, Spring 2018">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js" type="text/javascript"></script>
+  <script src="ajax.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="ajax.css" type="text/css">
+  </head>
+  <body>
+    
+    <img id="logo" src="img/logo_westworld.png" />
+    
+    <div id="mainContent">
+      <h1>Welcome to the Westworld Admin Portal</h1>
+      <p>Select the employee you wish to edit</p>
+
+      <select id="employeeDropdown" onchange="javascript:loadEmployee();">
+        <option value="0">Please choose...</option>
+        <option value="1">Dolores Abernathy</option>
+        <option value="2">Peter Abernathy</option>
+        <option value="3">Bernard Lowe</option>
+        <option value="4">Maeve Millay</option>
+        <option value="5">Clementine Pennyfeather</option>
+      </select>
+      
+      <div id="employeeContent">
+        <img id="employeeProfilePic" src="img/profilePic_clementinePennyfeather.jpg" />
+      </div>
+      
+      <div id="debug"></div>
+    </div>
+    
+   </body>
+</html>
