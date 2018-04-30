@@ -5,9 +5,18 @@ body {
 img#logo {
   margin: 1rem 0 0 0;
 }
+img#employeeProfilePic {
+  float: left;
+}
 div#mainContent {
   margin: 0 0 0 6rem;
 }
 div#employeeContent {
   margin: 1rem 0 0 0;
+}
+div#employeeContent #details {
+  margin: 0 0 0 15rem;
+}
+div#employeeContent #details p#name {
+  font-weight: bold;
 }
