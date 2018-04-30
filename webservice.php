@@ -14,8 +14,10 @@
   $sql = "SELECT name, species, age, gender, occupation, ethnicity, hair, eyes, profile_pic_filename FROM $dbTable WHERE ID = $empId";
   $result = $mysqli->query($sql);
   $row = $result->fetch_assoc();
+  $tempArray[] = $row;
   
-  echo $row['profile_pic_filename'];
+  echo json_encode($tempArray);
   
+  $result->close();
   $mysqli->close();
 ?>
