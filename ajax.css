@@ -1,0 +1,13 @@
+body {
+  font-family: helvetica, arial, sans-serif;
+  background-color:#fde797
+}
+img#logo {
+  margin: 1rem 0 0 0;
+}
+div#mainContent {
+  margin: 0 0 0 6rem;
+}
+div#employeeContent {
+  margin: 1rem 0 0 0;
+}
