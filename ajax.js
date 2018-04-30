@@ -4,7 +4,7 @@ function loadEmployee() {
   empId = document.getElementById("employeeDropdown").value;
   
   // Create
-  querySelect();
+  querySelect(empId);
   
   // Debugging...
   document.getElementById("debug").innerHTML = "You selected: " + empId;
@@ -12,14 +12,14 @@ function loadEmployee() {
 }
 
 function querySelect(empId) {
-  reqUrl = "webservice.php" + "?emp=" + empId;
+  reqUrl = "webservice.php" + "?empId=" + empId;
   reqObj = new XMLHttpRequest();
   
-  reqObj.open("GET", reqUrl, true);
-  
-  reqObj.setRequestHeader("Cache-Control", "no-cache");
-  reqObj.setRequestHeader("Pragma", "no-cache");
-  reqObj.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  reqObj.open("GET", reqUrl, false);
   
   reqObj.send();
+  
+  imgUrl = "img/" + reqObj.responseText;
+  
+  document.getElementById("employeeProfilePic").src = imgUrl;
 }
