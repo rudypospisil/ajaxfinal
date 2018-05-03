@@ -1,14 +1,28 @@
-// Fires when user selects an employee in the dropdown.
+// May 1, 2018
+// Rudy Pospisil
+// NYU, AJAX & Web Services / Sam Sultan
+// Final Project
+
+// Getter - Find which employee the user selected.
+function getEmp() 
+{
+  empId = document.getElementById("employeeDropdown").value;
+  return empId;
+}
+
+
+// Fires onchange when user selects an employee in the dropdown.
 function loadEmployee() 
 {
+  // CSS magic on the buttons.
   document.getElementById("editButton").innerHTML = '<button type="button" onclick="employeeEdit();">EDIT</button>'; 
-  document.getElementById("editButton").style.display = "block";      
-  document.getElementById("submitButton").style.display = "none";  
+  document.getElementById("editButton").style.visibility = "visible";      
+  document.getElementById("submitButton").style.visibility = "hidden";  
   
   // Find which employee the user selected.
   getEmp();
   
-  // Execute query
+  // Execute SQL query
   employeeSelect(empId);
   
   // Debugging...
@@ -16,25 +30,33 @@ function loadEmployee()
 
 }
 
+// Sets up the request to pull in the employee info.
 function employeeSelect(empId) 
 {
+  // Create request object.
   reqUrl = "webservice.php?q=select&empId=" + empId;
   reqObj = new XMLHttpRequest();
   
+  // Set up async listener.
   reqObj.onreadystatechange = ajaxResponse; 
   
+  // Set up the get request.
   reqObj.open("GET", reqUrl, true);
   
+  // Send request. Parameters are in URL.
   reqObj.send();
 }
 
+// Set up the editable fields.
 function employeeEdit() 
 {
+  // CSS button magic.
   document.getElementById("editButton").disabled = true;  
-  document.getElementById("editButton").style.display = "none";  
-  document.getElementById("submitButton").style.display = "block";  
+  document.getElementById("editButton").style.visibility = "hidden";  
+  document.getElementById("submitButton").style.visibility = "visible";  
   document.getElementById("submitButton").innerHTML = '<input type="submit" value="SUBMIT">';  
 
+// This will wrap the employee details in editable input fields.
   document.getElementById("fullName").innerHTML = '<input name="fullName" value="' + jObj[0]["fullName"] + '">' + '</input>';
   document.getElementById("species").innerHTML = '<input name="species" value="' + jObj[0]["species"] + '">' + '</input>';
   document.getElementById("age").innerHTML = '<input name="age" value="' + jObj[0]["age"] + '">' + '</input>';
@@ -47,9 +69,13 @@ function employeeEdit()
 
 function employeeUpdate() 
 {
+  // Grab the employee id.
   empId = getEmp();
+
+  // This call will be a POST but the query method and employee ID will be GETted.
   reqUrl = "webservice.php?q=update&empId=" + empId;
   
+  // Build the requestbody for the POST to PHP. Navigating the DOM old school JavaScript. Probably not best hard coding this way as it's not easily maintainable.
   reqBody = 
     "fullName=" + 
     document.forms[0][0].value + 
@@ -70,31 +96,52 @@ function employeeUpdate()
 
   //console.log(reqBody);
 
+  // Create the XMLHttpReq object.
   reqObj = new XMLHttpRequest();
-  
+
+  // Set up the async POST request.
   reqObj.open("POST", reqUrl, true);
 
-  reqObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  //reqObj.setRequestHeader("Content-length", reqBody.length);
-  //reqObj.setRequestHeader("Connection", "close");  
+  // Unlike the previous listener, this is set up as a self-calling function.
+  reqObj.onreadystatechange = function()
+    {
+      // XMLHttpRequest obj has returned.
+      if (reqObj.readyState == 4)
+      {
+        // SQL Update was successful.
+        if (reqObj.response == "TRUE")
+        {
+          document.getElementById("editButton").disabled = false;  
+          document.getElementById("editButton").style.visibility = "visible";  
+          document.getElementById("submitButton").innerHTML = "<strong>Edit was successful!</strong>";  
+        
+          // Zero out the reqObj to avoid pre-edited data being rendered.
+          reqObj = "";
+        
+          // Re-populate with the updated SQL data.
+          employeeSelect(empId);
+       }
+       else
+       {
+        //document.getElementById("details").style.visibility = "hidden"; 
+        // SQL update failed. 
+        document.getElementById("submitButton").innerHTML = "<strong>Update was unsuccessful.</strong>";      
+       }
+      }
+    }
+
+    // Set headers for POST.
+    reqObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //reqObj.setRequestHeader("Content-length", reqBody.length);
+    //reqObj.setRequestHeader("Connection", "close");  
   
-  reqObj.send(reqBody);
-  
-  document.getElementById("editButton").disabled = false;  
-  document.getElementById("editButton").style.display = "block";  
-  document.getElementById("submitButton").innerHTML = "<strong>Edit was successful!</strong>";  
-  
-  employeeSelect(empId);
-  
+    // Send request with POST data.
+    reqObj.send(reqBody);
 }
 
-// Find which employee the user selected.
-function getEmp() 
-{
-  empId = document.getElementById("employeeDropdown").value;
-  return empId;
-}
 
+
+// This will parse the SQL return and write out the employee details.
 function ajaxResponse() 
 {
   if (reqObj.readyState == 4)
@@ -116,3 +163,26 @@ function ajaxResponse()
   
   }
 }
+
+  // Not using this as I embedded it into the onreadystate.
+  function ajaxUpdate()
+  {
+    if (reqObj.readyState == 4)
+    {
+     if (reqObj.response == "TRUE")
+     {
+        document.getElementById("editButton").disabled = false;  
+        document.getElementById("editButton").style.visibility = "visible";  
+        document.getElementById("submitButton").innerHTML = "<strong>Edit was successful!</strong>";  
+      
+        reqObj = "";
+      
+        employeeSelect(empId);
+     }
+     else
+     {
+      document.getElementById("details").style.visibility = "hidden";  
+      document.getElementById("submitButton").innerHTML = "<strong>Update was unsuccessful.</strong>";      
+     }
+   }
+  }
