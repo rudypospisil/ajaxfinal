@@ -28,34 +28,12 @@ function employeeSelect(empId)
   reqObj.send();
 }
 
-function ajaxResponse() 
-{
-  if (reqObj.readyState == 4)
-  {
-  jObj = JSON.parse(reqObj.response);
-  
-  imgUrl = "img/" + jObj[0]["profilePicFilename"];
-  
-  document.getElementById("employeeProfilePic").src = imgUrl;
-  
-  document.getElementById("fullName").innerHTML = jObj[0]["fullName"];
-  document.getElementById("species").innerHTML = jObj[0]["species"];
-  document.getElementById("age").innerHTML = jObj[0]["age"];
-  document.getElementById("gender").innerHTML = jObj[0]["gender"];
-  document.getElementById("occupation").innerHTML = jObj[0]["occupation"];
-  document.getElementById("ethnicity").innerHTML = jObj[0]["ethnicity"];
-  document.getElementById("hair").innerHTML = jObj[0]["hair"];
-  document.getElementById("eyes").innerHTML = jObj[0]["eyes"];
-  
-  }
-}
-
 function employeeEdit() 
 {
   document.getElementById("editButton").disabled = true;  
   document.getElementById("editButton").style.display = "none";  
   document.getElementById("submitButton").style.display = "block";  
-  document.getElementById("submitButton").innerHTML = '<button type="button" onclick="employeeUpdate();">SUBMIT YOUR UPDATES</input>';  
+  document.getElementById("submitButton").innerHTML = '<input type="submit" value="SUBMIT">';  
 
   document.getElementById("fullName").innerHTML = '<input name="fullName" value="' + jObj[0]["fullName"] + '">' + '</input>';
   document.getElementById("species").innerHTML = '<input name="species" value="' + jObj[0]["species"] + '">' + '</input>';
@@ -69,16 +47,45 @@ function employeeEdit()
 
 function employeeUpdate() 
 {
-  getEmp();
+  empId = getEmp();
   reqUrl = "webservice.php?q=update&empId=" + empId;
   
+  reqBody = 
+    "fullName=" + 
+    document.forms[0][0].value + 
+    "&species=" +
+    document.forms[0][1].value +
+    "&age=" +
+    document.forms[0][2].value +
+    "&gender=" +
+    document.forms[0][3].value +
+    "&occupation=" +
+    document.forms[0][4].value +
+    "&ethnicity=" +
+    document.forms[0][5].value +
+    "&hair=" +
+    document.forms[0][6].value +
+    "&eyes=" +
+    document.forms[0][7].value;
+
+  //console.log(reqBody);
+
   reqObj = new XMLHttpRequest();
   
   reqObj.open("POST", reqUrl, true);
+
+  reqObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  //reqObj.setRequestHeader("Content-length", reqBody.length);
+  //reqObj.setRequestHeader("Connection", "close");  
   
-  //postString = "fullName="+jObj[0]["fullName"];
+  reqObj.send(reqBody);
   
-  reqObj.send();
+  document.getElementById("editButton").disabled = false;  
+  document.getElementById("editButton").style.display = "block";  
+  document.getElementById("submitButton").innerHTML = "<strong>Edit was successful!</strong>";  
+  
+  employeeSelect(empId);
+  
 }
 
 // Find which employee the user selected.
@@ -86,4 +93,26 @@ function getEmp()
 {
   empId = document.getElementById("employeeDropdown").value;
   return empId;
+}
+
+function ajaxResponse() 
+{
+  if (reqObj.readyState == 4)
+  {
+    jObj = JSON.parse(reqObj.response);
+  
+    imgUrl = "img/" + jObj[0]["profilePicFilename"];
+  
+    document.getElementById("employeeProfilePic").src = imgUrl;
+  
+    document.getElementById("fullName").innerHTML = jObj[0]["fullName"];
+    document.getElementById("species").innerHTML = jObj[0]["species"];
+    document.getElementById("age").innerHTML = jObj[0]["age"];
+    document.getElementById("gender").innerHTML = jObj[0]["gender"];
+    document.getElementById("occupation").innerHTML = jObj[0]["occupation"];
+    document.getElementById("ethnicity").innerHTML = jObj[0]["ethnicity"];
+    document.getElementById("hair").innerHTML = jObj[0]["hair"];
+    document.getElementById("eyes").innerHTML = jObj[0]["eyes"];
+  
+  }
 }
