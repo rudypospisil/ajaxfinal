@@ -1,6 +1,11 @@
+/* May 1, 2018 */
+/* Rudy Pospisil */
+/* NYU, AJAX & Web Services / Sam Sultan */
+/* Final Project */
+
 body {
   font-family: helvetica, arial, sans-serif;
-  background-color:#fde797
+  background-color:#fff;
 }
 img#logo {
   margin: 1rem 0 0 0;
@@ -23,4 +28,7 @@ div#employeeContent #details p#name {
 }
 div#employeeContent #details button#editButton {
   float: left;
+}
+div#employeeContent input {
+  background-color: fdfdf9;
 }
